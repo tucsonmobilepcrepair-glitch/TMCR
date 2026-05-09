@@ -19,13 +19,15 @@
   mount.innerHTML = `
     <style>
       #tmcr-scheduler {
-        --tmcr-ink: #12151c;
-        --tmcr-text: #26303d;
-        --tmcr-muted: #657181;
-        --tmcr-line: #dfe4ea;
-        --tmcr-soft: #f3f6f8;
-        --tmcr-accent: #008fa1;
-        --tmcr-accent-dark: #006b78;
+        --tmcr-ink: #151922;
+        --tmcr-text: #293241;
+        --tmcr-muted: #637083;
+        --tmcr-line: #dce3ea;
+        --tmcr-soft: #f4f7f9;
+        --tmcr-paper: #ffffff;
+        --tmcr-accent: #007f8f;
+        --tmcr-accent-dark: #005f6c;
+        --tmcr-warm: #b87525;
         --tmcr-danger: #b42318;
         --tmcr-success: #1f7a4d;
         color: var(--tmcr-text);
@@ -48,50 +50,118 @@
         cursor: pointer;
       }
 
-      .tmcr-wrap {
+      #tmcr-scheduler button:focus,
+      #tmcr-scheduler input:focus,
+      #tmcr-scheduler select:focus,
+      #tmcr-scheduler textarea:focus {
+        outline: 3px solid rgba(184, 117, 37, 0.35);
+        outline-offset: 2px;
+      }
+
+      .tmcr-shell {
         display: grid;
         gap: 24px;
-        padding: clamp(20px, 4vw, 34px);
+        padding: clamp(18px, 3vw, 34px);
         border: 1px solid var(--tmcr-line);
         border-radius: 8px;
         background: var(--tmcr-soft);
       }
 
-      .tmcr-header {
+      .tmcr-hero {
         display: grid;
-        grid-template-columns: minmax(0, 0.9fr) minmax(260px, 0.65fr);
+        grid-template-columns: minmax(0, 1fr) minmax(270px, 0.55fr);
         gap: 24px;
         align-items: end;
       }
 
-      .tmcr-header h2 {
-        margin: 0;
+      .tmcr-eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        margin-bottom: 12px;
+        color: var(--tmcr-accent-dark);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      .tmcr-hero h2 {
+        margin: 0 0 12px;
         color: var(--tmcr-ink);
-        font-size: clamp(30px, 5vw, 52px);
+        font-size: clamp(30px, 4vw, 48px);
         line-height: 1;
         letter-spacing: 0;
         text-transform: uppercase;
       }
 
-      .tmcr-header p {
+      .tmcr-hero p {
+        max-width: 680px;
         margin: 0;
         color: var(--tmcr-muted);
         font-size: 17px;
       }
 
+      .tmcr-callout {
+        display: grid;
+        gap: 8px;
+        padding: 18px;
+        border-left: 4px solid var(--tmcr-warm);
+        border-radius: 8px;
+        background: var(--tmcr-paper);
+        box-shadow: 0 10px 24px rgba(21, 25, 34, 0.06);
+      }
+
+      .tmcr-callout strong {
+        color: var(--tmcr-ink);
+        font-size: 15px;
+        text-transform: uppercase;
+      }
+
+      .tmcr-callout span {
+        color: var(--tmcr-muted);
+        font-size: 14px;
+      }
+
+      .tmcr-steps {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .tmcr-step {
+        min-height: 78px;
+        padding: 14px;
+        border: 1px solid var(--tmcr-line);
+        border-radius: 8px;
+        background: var(--tmcr-paper);
+      }
+
+      .tmcr-step strong {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--tmcr-ink);
+        font-size: 13px;
+        text-transform: uppercase;
+      }
+
+      .tmcr-step span {
+        color: var(--tmcr-muted);
+        font-size: 14px;
+      }
+
       .tmcr-grid {
         display: grid;
-        grid-template-columns: minmax(300px, 0.95fr) minmax(300px, 0.8fr);
-        gap: 24px;
+        grid-template-columns: minmax(310px, 0.9fr) minmax(330px, 1fr);
+        gap: 22px;
         align-items: start;
       }
 
       .tmcr-panel {
-        padding: clamp(20px, 4vw, 30px);
+        padding: clamp(18px, 3vw, 28px);
         border: 1px solid var(--tmcr-line);
         border-radius: 8px;
-        background: white;
-        box-shadow: 0 16px 35px rgba(17, 19, 24, 0.08);
+        background: var(--tmcr-paper);
+        box-shadow: 0 16px 34px rgba(21, 25, 34, 0.08);
       }
 
       .tmcr-panel-heading {
@@ -105,8 +175,14 @@
       .tmcr-panel-heading h3 {
         margin: 0;
         color: var(--tmcr-ink);
-        font-size: 24px;
-        line-height: 1.1;
+        font-size: 22px;
+        line-height: 1.12;
+      }
+
+      .tmcr-panel-heading p {
+        margin: 4px 0 0;
+        color: var(--tmcr-muted);
+        font-size: 14px;
       }
 
       .tmcr-calendar-controls {
@@ -126,11 +202,16 @@
         font-weight: 900;
       }
 
+      .tmcr-icon-button:hover {
+        border-color: var(--tmcr-accent);
+        color: var(--tmcr-accent-dark);
+      }
+
       .tmcr-month-label {
-        margin-bottom: 14px;
+        margin-bottom: 12px;
         color: var(--tmcr-muted);
-        font-size: 14px;
-        font-weight: 800;
+        font-size: 13px;
+        font-weight: 900;
         text-transform: uppercase;
       }
 
@@ -141,26 +222,26 @@
       }
 
       .tmcr-weekday {
-        padding: 8px 0;
+        padding: 7px 0;
         color: var(--tmcr-muted);
-        font-size: 12px;
-        font-weight: 800;
+        font-size: 11px;
+        font-weight: 900;
         text-align: center;
         text-transform: uppercase;
       }
 
       .tmcr-day-button {
-        min-height: 48px;
+        min-height: 46px;
         border: 1px solid var(--tmcr-line);
         border-radius: 6px;
         background: white;
         color: var(--tmcr-ink);
-        font-weight: 800;
+        font-weight: 900;
       }
 
       .tmcr-day-button[disabled] {
         cursor: not-allowed;
-        opacity: 0.35;
+        opacity: 0.34;
       }
 
       .tmcr-day-button.tmcr-available:hover,
@@ -175,7 +256,14 @@
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 8px;
-        margin-top: 22px;
+        margin-top: 20px;
+      }
+
+      .tmcr-time-slots p {
+        grid-column: 1 / -1;
+        margin: 0;
+        color: var(--tmcr-muted);
+        font-size: 15px;
       }
 
       .tmcr-slot-button {
@@ -185,7 +273,7 @@
         background: white;
         color: var(--tmcr-ink);
         font-size: 14px;
-        font-weight: 800;
+        font-weight: 900;
       }
 
       .tmcr-slot-button[disabled] {
@@ -193,6 +281,22 @@
         color: var(--tmcr-muted);
         background: #eef1f4;
         text-decoration: line-through;
+      }
+
+      .tmcr-summary {
+        display: grid;
+        gap: 5px;
+        margin: 0 0 18px;
+        padding: 14px;
+        border-left: 4px solid var(--tmcr-accent);
+        border-radius: 0 8px 8px 0;
+        background: #eefbfc;
+        color: var(--tmcr-ink);
+        font-size: 14px;
+      }
+
+      .tmcr-summary strong {
+        text-transform: uppercase;
       }
 
       .tmcr-field-grid {
@@ -204,7 +308,7 @@
       .tmcr-field {
         display: grid;
         gap: 7px;
-        margin-bottom: 14px;
+        margin-bottom: 13px;
       }
 
       .tmcr-field-full {
@@ -213,7 +317,7 @@
 
       #tmcr-scheduler label {
         color: var(--tmcr-ink);
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 900;
         text-transform: uppercase;
       }
@@ -231,23 +335,14 @@
       }
 
       #tmcr-scheduler textarea {
-        min-height: 105px;
+        min-height: 106px;
         resize: vertical;
       }
 
-      .tmcr-summary {
-        display: grid;
-        gap: 6px;
-        margin: 6px 0 18px;
-        padding: 14px;
-        border-left: 4px solid var(--tmcr-accent);
-        background: #eefbfc;
-        color: var(--tmcr-ink);
-        font-size: 14px;
-      }
-
-      .tmcr-summary strong {
-        text-transform: uppercase;
+      .tmcr-helper {
+        margin: -4px 0 14px;
+        color: var(--tmcr-muted);
+        font-size: 13px;
       }
 
       .tmcr-actions {
@@ -255,7 +350,7 @@
         flex-wrap: wrap;
         gap: 10px;
         align-items: center;
-        margin-top: 10px;
+        margin-top: 8px;
       }
 
       .tmcr-button {
@@ -268,15 +363,14 @@
         border-radius: 6px;
         background: var(--tmcr-accent-dark);
         color: white;
-        font-weight: 800;
+        font-weight: 900;
         text-transform: uppercase;
         font-size: 13px;
       }
 
-      .tmcr-button-secondary {
-        border-color: var(--tmcr-ink);
-        background: white;
-        color: var(--tmcr-ink);
+      .tmcr-button[disabled] {
+        cursor: progress;
+        opacity: 0.72;
       }
 
       .tmcr-status {
@@ -294,67 +388,95 @@
         color: var(--tmcr-danger);
       }
 
-      .tmcr-appointment-list {
-        display: grid;
-        gap: 10px;
-        margin-top: 18px;
-      }
-
-      .tmcr-appointment-card {
-        display: grid;
-        gap: 4px;
-        padding: 14px;
-        border: 1px solid var(--tmcr-line);
-        border-radius: 8px;
-        background: white;
-        font-size: 14px;
-      }
-
-      .tmcr-appointment-card strong {
-        color: var(--tmcr-ink);
-      }
-
-      .tmcr-appointment-card button {
-        justify-self: start;
-        margin-top: 6px;
-        border: 0;
-        background: transparent;
-        color: var(--tmcr-danger);
-        font-weight: 800;
-        padding: 0;
-        text-transform: uppercase;
-      }
-
       @media (max-width: 980px) {
-        .tmcr-header,
-        .tmcr-grid {
+        .tmcr-hero,
+        .tmcr-grid,
+        .tmcr-steps {
           grid-template-columns: 1fr;
         }
       }
 
       @media (max-width: 620px) {
+        .tmcr-shell {
+          padding: 16px;
+          gap: 18px;
+        }
+
+        .tmcr-panel {
+          padding: 16px;
+        }
+
+        .tmcr-panel-heading {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .tmcr-calendar-controls {
+          width: 100%;
+          justify-content: space-between;
+        }
+
         .tmcr-field-grid,
         .tmcr-time-slots {
           grid-template-columns: 1fr;
         }
 
+        .tmcr-calendar-grid {
+          gap: 5px;
+        }
+
         .tmcr-day-button {
-          min-height: 42px;
+          min-height: 40px;
           padding: 0;
+          font-size: 14px;
+        }
+
+        .tmcr-hero h2 {
+          font-size: 30px;
+        }
+
+        .tmcr-actions,
+        .tmcr-button {
+          width: 100%;
         }
       }
     </style>
 
-    <div class="tmcr-wrap">
-      <div class="tmcr-header">
-        <h2>Book an Appointment</h2>
-        <p>Pick an available day and time, add the device details, then create a service request.</p>
+    <section class="tmcr-shell" aria-label="Schedule computer repair">
+      <div class="tmcr-hero">
+        <div>
+          <span class="tmcr-eyebrow">Tucson mobile computer repair</span>
+          <h2>Schedule Service</h2>
+          <p>Choose a weekday appointment, tell us what is happening, and we will follow up with clear next steps for diagnostics, pick-up, or repair.</p>
+        </div>
+        <div class="tmcr-callout">
+          <strong>Need help today?</strong>
+          <span>Call (520) 585-2939 if the issue is urgent or the device will not power on.</span>
+        </div>
+      </div>
+
+      <div class="tmcr-steps" aria-label="Booking steps">
+        <div class="tmcr-step">
+          <strong>1. Pick a time</strong>
+          <span>Available weekday slots are shown in Arizona time.</span>
+        </div>
+        <div class="tmcr-step">
+          <strong>2. Describe the issue</strong>
+          <span>Include model, symptoms, and recent changes.</span>
+        </div>
+        <div class="tmcr-step">
+          <strong>3. Get confirmation</strong>
+          <span>Your request is saved and prepared as an email.</span>
+        </div>
       </div>
 
       <div class="tmcr-grid">
         <div class="tmcr-panel" aria-label="Appointment calendar">
           <div class="tmcr-panel-heading">
-            <h3>Calendar</h3>
+            <div>
+              <h3>Calendar</h3>
+              <p>Weekends and past dates are unavailable.</p>
+            </div>
             <div class="tmcr-calendar-controls">
               <button class="tmcr-icon-button" type="button" data-prev aria-label="Previous month">&lsaquo;</button>
               <button class="tmcr-icon-button" type="button" data-next aria-label="Next month">&rsaquo;</button>
@@ -367,8 +489,12 @@
 
         <form class="tmcr-panel" data-form>
           <div class="tmcr-panel-heading">
-            <h3>Request Details</h3>
+            <div>
+              <h3>Request Details</h3>
+              <p>We use this information only to prepare for your appointment.</p>
+            </div>
           </div>
+
           <div class="tmcr-summary" data-summary>
             <strong>No time selected</strong>
             <span>Choose a day and time from the calendar.</span>
@@ -400,7 +526,7 @@
             </div>
             <div class="tmcr-field tmcr-field-full">
               <label for="tmcr-device">Device</label>
-              <input id="tmcr-device" name="deviceInfo" placeholder="Example: Dell laptop, Windows 11, won't start" required>
+              <input id="tmcr-device" name="deviceInfo" placeholder="Example: Dell laptop, Windows 11, will not start" required>
             </div>
             <div class="tmcr-field tmcr-field-full">
               <label for="tmcr-issue">What is happening?</label>
@@ -408,15 +534,15 @@
             </div>
           </div>
 
+          <p class="tmcr-helper">Submitting saves your request and opens your email app with the same details ready to send.</p>
+
           <div class="tmcr-actions">
-            <button class="tmcr-button" type="submit">Create Request</button>
-            <button class="tmcr-button tmcr-button-secondary" type="button" data-clear>Clear Saved Bookings</button>
+            <button class="tmcr-button" type="submit" data-submit>Create Request</button>
           </div>
           <div class="tmcr-status" data-status role="status"></div>
-          <div class="tmcr-appointment-list" data-appointments aria-live="polite"></div>
         </form>
       </div>
-    </div>
+    </section>
   `;
 
   const monthLabel = mount.querySelector("[data-month]");
@@ -424,8 +550,8 @@
   const timeSlots = mount.querySelector("[data-slots]");
   const bookingSummary = mount.querySelector("[data-summary]");
   const bookingStatus = mount.querySelector("[data-status]");
-  const appointmentList = mount.querySelector("[data-appointments]");
   const bookingForm = mount.querySelector("[data-form]");
+  const submitButton = mount.querySelector("[data-submit]");
 
   async function apiRequest(path, options = {}) {
     const response = await fetch(`${apiBase}${path}`, {
@@ -566,39 +692,6 @@
     bookingSummary.innerHTML = `<strong>${formatDate(selectedDate)}</strong><span>${selectedTime} Arizona time</span>`;
   }
 
-  function renderAppointments() {
-    const bookings = [...bookingsCache].sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
-    appointmentList.innerHTML = "";
-
-    bookings.forEach((booking) => {
-      const card = document.createElement("article");
-      card.className = "tmcr-appointment-card";
-      card.innerHTML = `
-        <strong>${formatDate(booking.date)} at ${booking.time}</strong>
-        <span>${booking.serviceType} for ${booking.customerName}</span>
-        <span>${booking.deviceInfo}</span>
-      `;
-
-      const remove = document.createElement("button");
-      remove.type = "button";
-      remove.textContent = "Remove";
-      remove.addEventListener("click", async () => {
-        try {
-          await apiRequest(`/api/bookings/${encodeURIComponent(booking.id)}`, { method: "DELETE" });
-          await refreshBookings();
-          renderAppointments();
-          renderCalendar();
-          setStatus("Booking removed from the backend.");
-        } catch (error) {
-          setStatus(error.message, "error");
-        }
-      });
-
-      card.appendChild(remove);
-      appointmentList.appendChild(card);
-    });
-  }
-
   function setStatus(message, type) {
     bookingStatus.textContent = message;
     bookingStatus.className = `tmcr-status${type ? ` tmcr-${type}` : ""}`;
@@ -645,6 +738,8 @@
     };
 
     try {
+      submitButton.disabled = true;
+      submitButton.textContent = "Saving...";
       setStatus("Saving appointment request...");
       const payload = await apiRequest("/api/bookings", {
         method: "POST",
@@ -656,12 +751,14 @@
       selectedTime = "";
       bookingForm.reset();
       updateSummary();
-      renderAppointments();
       renderCalendar();
     } catch (error) {
       setStatus(error.message, "error");
       await refreshBookings();
       renderTimeSlots();
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = "Create Request";
     }
   });
 
@@ -675,28 +772,15 @@
     renderCalendar();
   });
 
-  mount.querySelector("[data-clear]").addEventListener("click", async () => {
-    try {
-      await apiRequest("/api/bookings", { method: "DELETE" });
-      await refreshBookings();
-      setStatus("All backend bookings were cleared.");
-      renderAppointments();
-      renderCalendar();
-    } catch (error) {
-      setStatus(error.message, "error");
-    }
-  });
-
   async function startScheduler() {
     try {
       await refreshBookings();
     } catch (error) {
-      setStatus("The scheduling backend is not responding.", "error");
+      setStatus("The scheduling system is waking up. Please refresh in a moment if times do not load.", "error");
     }
 
     renderCalendar();
     updateSummary();
-    renderAppointments();
   }
 
   startScheduler();

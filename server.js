@@ -310,6 +310,13 @@ async function readRequestBody(req) {
 
 function publicBooking(booking) {
   return {
+    date: booking.date,
+    time: booking.time
+  };
+}
+
+function privateBooking(booking) {
+  return {
     id: booking.id,
     date: booking.date,
     time: booking.time,
@@ -321,6 +328,10 @@ function publicBooking(booking) {
     issueDescription: booking.issueDescription,
     createdAt: booking.createdAt
   };
+}
+
+function isAdminRequest(req) {
+  return Boolean(process.env.ADMIN_TOKEN) && req.headers["x-admin-token"] === process.env.ADMIN_TOKEN;
 }
 
 async function handleApi(req, res, url) {
@@ -376,11 +387,16 @@ async function handleApi(req, res, url) {
       return;
     }
 
-    sendJson(res, 201, { booking: publicBooking(result.booking) });
+    sendJson(res, 201, { booking: privateBooking(result.booking) });
     return;
   }
 
   if (req.method === "DELETE" && url.pathname === "/api/bookings") {
+    if (!isAdminRequest(req)) {
+      sendJson(res, 403, { error: "Admin token is required." });
+      return;
+    }
+
     await clearBookings();
     sendJson(res, 200, { ok: true });
     return;
@@ -389,6 +405,11 @@ async function handleApi(req, res, url) {
   const deleteMatch = url.pathname.match(/^\/api\/bookings\/([^/]+)$/);
 
   if (req.method === "DELETE" && deleteMatch) {
+    if (!isAdminRequest(req)) {
+      sendJson(res, 403, { error: "Admin token is required." });
+      return;
+    }
+
     const id = decodeURIComponent(deleteMatch[1]);
     const deleted = await deleteBooking(id);
 
