@@ -11,6 +11,8 @@
     return;
   }
 
+  document.documentElement.classList.add("tmcr-scheduler-active");
+
   let bookingsCache = [];
   let visibleMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   let selectedDate = null;
@@ -39,6 +41,15 @@
 
       #tmcr-scheduler * {
         box-sizing: border-box;
+      }
+
+      #tmcr-scheduler h2,
+      #tmcr-scheduler h3,
+      #tmcr-scheduler p,
+      #tmcr-scheduler span,
+      #tmcr-scheduler strong,
+      #tmcr-scheduler label {
+        text-shadow: none !important;
       }
 
       #tmcr-scheduler button,
@@ -87,7 +98,7 @@
 
       .tmcr-hero h2 {
         margin: 0 0 12px;
-        color: var(--tmcr-ink);
+        color: var(--tmcr-ink) !important;
         font-size: clamp(30px, 4vw, 48px);
         line-height: 1;
         letter-spacing: 0;
@@ -97,7 +108,7 @@
       .tmcr-hero p {
         max-width: 680px;
         margin: 0;
-        color: var(--tmcr-muted);
+        color: var(--tmcr-muted) !important;
         font-size: 18px;
       }
 
@@ -112,13 +123,13 @@
       }
 
       .tmcr-callout strong {
-        color: var(--tmcr-ink);
+        color: var(--tmcr-ink) !important;
         font-size: 15px;
         text-transform: uppercase;
       }
 
       .tmcr-callout span {
-        color: var(--tmcr-muted);
+        color: var(--tmcr-muted) !important;
         font-size: 14px;
       }
 
@@ -140,13 +151,13 @@
       .tmcr-step strong {
         display: block;
         margin-bottom: 2px;
-        color: var(--tmcr-ink);
+        color: var(--tmcr-ink) !important;
         font-size: 13px;
         text-transform: uppercase;
       }
 
       .tmcr-step span {
-        color: var(--tmcr-muted);
+        color: var(--tmcr-muted) !important;
         font-size: 14px;
       }
 
@@ -175,14 +186,14 @@
 
       .tmcr-panel-heading h3 {
         margin: 0;
-        color: var(--tmcr-ink);
+        color: var(--tmcr-ink) !important;
         font-size: 22px;
         line-height: 1.12;
       }
 
       .tmcr-panel-heading p {
         margin: 4px 0 0;
-        color: var(--tmcr-muted);
+        color: var(--tmcr-muted) !important;
         font-size: 14px;
       }
 
@@ -210,7 +221,7 @@
 
       .tmcr-month-label {
         margin-bottom: 12px;
-        color: var(--tmcr-muted);
+        color: var(--tmcr-muted) !important;
         font-size: 13px;
         font-weight: 900;
         text-transform: uppercase;
@@ -224,7 +235,7 @@
 
       .tmcr-weekday {
         padding: 7px 0;
-        color: var(--tmcr-muted);
+        color: var(--tmcr-muted) !important;
         font-size: 11px;
         font-weight: 900;
         text-align: center;
@@ -319,7 +330,7 @@
       }
 
       #tmcr-scheduler label {
-        color: var(--tmcr-ink);
+        color: var(--tmcr-ink) !important;
         font-size: 12px;
         font-weight: 900;
         text-transform: uppercase;
@@ -350,7 +361,7 @@
 
       .tmcr-helper {
         margin: -4px 0 14px;
-        color: var(--tmcr-muted);
+        color: var(--tmcr-muted) !important;
         font-size: 13px;
       }
 
@@ -617,6 +628,21 @@
   const bookingForm = mount.querySelector("[data-form]");
   const submitButton = mount.querySelector("[data-submit]");
 
+  function hideDuplicateSquarespaceContent() {
+    const duplicateText = /Schedule Repair With Confidence|Simple Booking Process|Choose Your Service|Online appointment booking is being upgraded/i;
+    const candidates = document.querySelectorAll("main article, main section, main .page-section, main .sqs-layout");
+
+    candidates.forEach((element) => {
+      if (element.contains(mount)) {
+        return;
+      }
+
+      if (duplicateText.test(element.textContent || "")) {
+        element.style.display = "none";
+      }
+    });
+  }
+
   async function apiRequest(path, options = {}) {
     const response = await fetch(`${apiBase}${path}`, {
       headers: { "Content-Type": "application/json" },
@@ -837,6 +863,8 @@
   });
 
   async function startScheduler() {
+    hideDuplicateSquarespaceContent();
+
     try {
       await refreshBookings();
     } catch (error) {
