@@ -20,17 +20,19 @@
     <style>
       #tmcr-scheduler {
         --tmcr-ink: #151922;
-        --tmcr-text: #293241;
-        --tmcr-muted: #637083;
-        --tmcr-line: #dce3ea;
-        --tmcr-soft: #f4f7f9;
+        --tmcr-text: #263142;
+        --tmcr-muted: #465568;
+        --tmcr-line: #d7e0e8;
+        --tmcr-soft: #f7f9fb;
         --tmcr-paper: #ffffff;
         --tmcr-accent: #007f8f;
         --tmcr-accent-dark: #005f6c;
         --tmcr-warm: #b87525;
         --tmcr-danger: #b42318;
         --tmcr-success: #1f7a4d;
+        display: block;
         color: var(--tmcr-text);
+        background: var(--tmcr-paper);
         font-family: Arial, Helvetica, sans-serif;
         line-height: 1.55;
       }
@@ -60,11 +62,9 @@
 
       .tmcr-shell {
         display: grid;
-        gap: 24px;
-        padding: clamp(18px, 3vw, 34px);
-        border: 1px solid var(--tmcr-line);
-        border-radius: 8px;
-        background: var(--tmcr-soft);
+        gap: 26px;
+        padding: clamp(12px, 2vw, 20px) 0;
+        background: var(--tmcr-paper);
       }
 
       .tmcr-hero {
@@ -98,7 +98,7 @@
         max-width: 680px;
         margin: 0;
         color: var(--tmcr-muted);
-        font-size: 17px;
+        font-size: 18px;
       }
 
       .tmcr-callout {
@@ -107,8 +107,8 @@
         padding: 18px;
         border-left: 4px solid var(--tmcr-warm);
         border-radius: 8px;
-        background: var(--tmcr-paper);
-        box-shadow: 0 10px 24px rgba(21, 25, 34, 0.06);
+        background: #fffaf4;
+        box-shadow: none;
       }
 
       .tmcr-callout strong {
@@ -131,9 +131,10 @@
       .tmcr-step {
         min-height: 78px;
         padding: 14px;
-        border: 1px solid var(--tmcr-line);
+        border: 1px solid #dfe6ed;
         border-radius: 8px;
         background: var(--tmcr-paper);
+        box-shadow: 0 8px 18px rgba(21, 25, 34, 0.04);
       }
 
       .tmcr-step strong {
@@ -158,10 +159,10 @@
 
       .tmcr-panel {
         padding: clamp(18px, 3vw, 28px);
-        border: 1px solid var(--tmcr-line);
+        border: 1px solid #dfe6ed;
         border-radius: 8px;
         background: var(--tmcr-paper);
-        box-shadow: 0 16px 34px rgba(21, 25, 34, 0.08);
+        box-shadow: 0 10px 24px rgba(21, 25, 34, 0.06);
       }
 
       .tmcr-panel-heading {
@@ -241,7 +242,9 @@
 
       .tmcr-day-button[disabled] {
         cursor: not-allowed;
-        opacity: 0.34;
+        color: #9aa4b1;
+        background: #fbfcfd;
+        opacity: 1;
       }
 
       .tmcr-day-button.tmcr-available:hover,
@@ -278,7 +281,7 @@
 
       .tmcr-slot-button[disabled] {
         cursor: not-allowed;
-        color: var(--tmcr-muted);
+        color: #7d8997;
         background: #eef1f4;
         text-decoration: line-through;
       }
@@ -339,6 +342,12 @@
         resize: vertical;
       }
 
+      #tmcr-scheduler input::placeholder,
+      #tmcr-scheduler textarea::placeholder {
+        color: #687789;
+        opacity: 1;
+      }
+
       .tmcr-helper {
         margin: -4px 0 14px;
         color: var(--tmcr-muted);
@@ -388,6 +397,45 @@
         color: var(--tmcr-danger);
       }
 
+      .tmcr-support {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: center;
+        padding: 22px;
+        border-radius: 8px;
+        background: var(--tmcr-ink);
+        color: white;
+      }
+
+      .tmcr-support strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 18px;
+        line-height: 1.2;
+      }
+
+      .tmcr-support span {
+        color: #d9e1ea;
+        font-size: 15px;
+      }
+
+      .tmcr-support a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 0 18px;
+        border: 1px solid white;
+        border-radius: 6px;
+        color: white;
+        font-size: 13px;
+        font-weight: 900;
+        text-decoration: none;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
       @media (max-width: 980px) {
         .tmcr-hero,
         .tmcr-grid,
@@ -409,6 +457,14 @@
         .tmcr-panel-heading {
           align-items: flex-start;
           flex-direction: column;
+        }
+
+        .tmcr-support {
+          grid-template-columns: 1fr;
+        }
+
+        .tmcr-support a {
+          width: 100%;
         }
 
         .tmcr-calendar-controls {
@@ -541,6 +597,14 @@
           </div>
           <div class="tmcr-status" data-status role="status"></div>
         </form>
+      </div>
+
+      <div class="tmcr-support">
+        <div>
+          <strong>Questions before booking?</strong>
+          <span>Call or email Tucson Mobile Computer Repair for urgent issues, pricing questions, or help choosing the right service.</span>
+        </div>
+        <a href="tel:+15205852939">Call (520) 585-2939</a>
       </div>
     </section>
   `;
