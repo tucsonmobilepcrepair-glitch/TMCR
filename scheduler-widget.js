@@ -630,7 +630,7 @@
 
   function hideDuplicateSquarespaceContent() {
     const duplicateText = /Schedule Repair With Confidence|Simple Booking Process|Choose Your Service|Online appointment booking is being upgraded/i;
-    const candidates = document.querySelectorAll("main article, main section, main .page-section, main .sqs-layout");
+    const candidates = document.querySelectorAll("main article, main section, main .page-section, main .sqs-layout, main [data-section-id], article, section");
 
     candidates.forEach((element) => {
       if (element.contains(mount)) {
@@ -641,6 +641,19 @@
         element.style.display = "none";
       }
     });
+  }
+
+  function watchForDuplicateSquarespaceContent() {
+    hideDuplicateSquarespaceContent();
+
+    const interval = window.setInterval(hideDuplicateSquarespaceContent, 500);
+    window.setTimeout(() => window.clearInterval(interval), 12000);
+
+    if ("MutationObserver" in window) {
+      const observer = new MutationObserver(hideDuplicateSquarespaceContent);
+      observer.observe(document.body, { childList: true, subtree: true });
+      window.setTimeout(() => observer.disconnect(), 12000);
+    }
   }
 
   async function apiRequest(path, options = {}) {
@@ -863,7 +876,7 @@
   });
 
   async function startScheduler() {
-    hideDuplicateSquarespaceContent();
+    watchForDuplicateSquarespaceContent();
 
     try {
       await refreshBookings();
